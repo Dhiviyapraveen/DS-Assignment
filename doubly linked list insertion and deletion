@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+  int data;
+  struct node *next;
+  struct node *prev;
+};
+
+void append(struct node **v, int d) {
+  struct node *nn = (struct node *)malloc(sizeof(struct node));
+  nn->data = d;
+  nn->next = NULL;
+  nn->prev = NULL;
+  if ((*v) == NULL) {
+    (*v) = nn;
+  } else {
+    struct node *temp = (*v);
+    while (temp->next != NULL) {
+      temp = temp->next;
+    }
+    temp->next = nn;
+    nn->prev = temp;
+  }
+}
+
+void insert_beg(struct node **v, int d) {
+  struct node *nn = (struct node *)malloc(sizeof(struct node));
+  nn->data = d;
+  nn->next = NULL;
+  nn->prev = NULL;
+  if ((*v) == NULL) {
+    (*v) = nn;
+  } else {
+    nn->next = (*v);
+    //(*v)->prev = nn;
+    (*v) = nn;
+  }
+}
+
+void insert_pos(struct node **v, int d, int pos){
+  struct node *nn = (struct node*)malloc(sizeof(struct node));
+  nn->data = d;
+  nn->next = NULL;
+  nn->prev = NULL;
+  if ((*v) == NULL){
+    (*v) = nn;  
+  }
+  else{
+    struct node *temp = (*v);
+    int i=1;
+    while(i<pos-1){
+      temp = temp->next;
+      i++;
+    }
+    nn->next = temp->next;
+    temp->next = nn;
+    nn-> prev = temp;
+  }
+}
+
+void delete_beg(struct node **v){
+  if((*v) == NULL){
+    printf("List id empty");
+  }
+  else{
+    struct node *temp = (*v);
+    (*v) = (*v)->next;
+    (*v)->prev = NULL;
+    free(temp);
+  }
+}
+
+void delete_end(struct node **v){
+  struct node *temp = (*v),*prev;  
+  while(temp->next != NULL){
+    prev = temp;
+    temp = temp->next;
+  }
+  prev->next = NULL;
+  free(temp);
+}
+
+void delete_pos(struct node **v, int pos){
+  struct node *temp = (*v),*prev;
+  int i=1;
+  while(i<pos){
+    prev = temp;
+    temp = temp->next;
+    i++;
+  }
+  prev->next = temp->next;
+  free(temp);
+}
+
+void display(struct node *v) {
+  struct node *temp = v;
+  while (temp->next != NULL) {
+    printf("%d -> ", temp->data);
+    temp = temp->next;
+  }
+  printf("%d\n", temp->data);
+}
+
+int main(void) {
+  struct node *head=NULL;
+  append(&head, 10);
+  append(&head, 20);
+  printf("Insertion at end\n");
+  display(head);
+  insert_beg(&head, 30);
+  insert_beg(&head, 40);
+  insert_beg(&head, 50);
+  printf("Insertion at begining\n");
+  display(head);
+  insert_pos(&head, 60, 3);
+  insert_pos(&head, 100, 5);
+  printf("Insertion at position\n");
+  display(head);
+  printf("Deletion at begining\n");
+  delete_beg(&head);
+  display(head);
+  printf("Deletion at end\n");
+  delete_end(&head);
+  display(head);
+  printf("Deletion at position\n");
+  delete_pos(&head,3);
+  display(head);
+  return 0;
+}
